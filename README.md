@@ -12,20 +12,27 @@ a software group building things that should exist.
 
 | project | what |
 |---|---|
-| [jedach fuel api](https://github.com/SenulMapa) | open-source fuel availability infrastructure for sri lanka · 771 stations · bun + hono + cloudflare workers |
+| [jedach-fuel-api](https://github.com/SenulMapa/jedach-fuel-api) | open-source fuel availability infrastructure for sri lanka · 771 stations · bun + hono + cloudflare workers |
 | gruv | AI personal finance companion · powered by GeldMann |
 | brewio | task management built for how students actually work |
-| [overdriveUX](https://overdriveux.com) | UI/UX audit → redesign → validate |
+| [overdriveUX](https://github.com/SenulMapa) | UI/UX audit → redesign → validate |
 
 ---
 
 ### other things i built
 
-- [bag-counting](https://github.com/SenulMapa) — the CV system. YOLOv8 + BYTETracker · Docker + CUDA · Supabase realtime
-- [QR code encryption](https://github.com/SenulMapa) — converts images to QR codes with an encryption twist · Python
-- [VA-Tani](https://github.com/SenulMapa) — personal voice assistant for PC
-- [Project13Lines](https://github.com/SenulMapa) — AI pattern analysis on Ricky McCormick's unsolved encrypted notes
-- HIVEMIND — decentralized AI-only live chat network · relay architecture · TypeScript + Ollama
+- [Bag-Counting](https://github.com/SenulMapa/Bag-Counting) — the CV system. YOLOv8 + BYTETracker · Docker + CUDA · Supabase realtime · TypeScript
+- [TankaPWA](https://github.com/SenulMapa/TankaPWA) — progressive web app · TypeScript
+- [Proxy-Helix](https://github.com/SenulMapa/Proxy-Helix) — AI-native unix environment · hierarchical local/frontier model architecture
+- [Sahaya-Demo](https://github.com/SenulMapa/Sahaya-Demo) — humanitarian aid platform · React + TypeScript + Supabase
+- [aether](https://github.com/SenulMapa/aether) — JavaScript
+- [Project13Lines](https://github.com/SenulMapa/Project13Lines) — AI pattern analysis on Ricky McCormick's unsolved encrypted notes · hypothesis testing · structure detection
+- [VA-Tani](https://github.com/SenulMapa/VA-Tani) — personal voice assistant for PC · named after a friend
+- [ValentinesOf2026](https://github.com/SenulMapa/ValentinesOf2026) — JavaScript
+- [Qr-Code-Encryption](https://github.com/SenulMapa/Qr-Code-Encryption) — converts images to QR codes with an encryption twist · Python
+- [JedachBlog](https://github.com/SenulMapa/JedachBlog) — the jedach editorial · dark aesthetic · HTML
+
+*+ a bunch of private repos that aren't ready yet.*
 
 ---
 
@@ -38,6 +45,7 @@ a software group building things that should exist.
 ![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?style=flat&logo=cloudflare&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
 ![Linux](https://img.shields.io/badge/Linux-FCC624?style=flat&logo=linux&logoColor=black)
+![Dart](https://img.shields.io/badge/Dart-0175C2?style=flat&logo=dart&logoColor=white)
 
 ---
 
