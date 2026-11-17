@@ -1,0 +1,27 @@
+{
+  "slug": "gruv",
+  "name": "Gruv",
+  "kicker": "Jedach · fintech",
+  "tagline": "A money companion built for how young Sri Lankans actually live.",
+  "bg": "#0c1712",
+  "fg": "#eef6f0",
+  "accent": "#3ddc84",
+  "scenes": [
+    {"type": "hook", "dur": 3.9, "lines": ["Sri Lanka has no open banking.", "So I built a finance app that reads your bank SMS."]},
+    {"type": "title", "dur": 3.0},
+    {"type": "phone", "dur": 3.6, "image": "10-home.png", "kicker": "01 · the ledger",
+     "title": "Balances derived from every transaction.", "accent_words": ["derived"],
+     "sub": "Imports that go wrong can be reversed, not reconciled by hand."},
+    {"type": "phone", "dur": 3.6, "image": "15-add-transaction.png", "kicker": "02 · capture",
+     "title": "SMS parsing + on-device statement OCR.", "accent_words": ["on-device"],
+     "sub": "Bank statements never leave the phone."},
+    {"type": "phone", "dur": 3.6, "image": "14-geldmann-chat.png", "kicker": "03 · geldmann",
+     "title": "An AI companion, not a guilt machine.", "accent_words": ["companion,"],
+     "sub": "Insights are real arithmetic on your ledger. The LLM just talks."},
+    {"type": "phone", "dur": 3.6, "image": "12-insights.png", "kicker": "04 · built for here",
+     "title": "Family is a top-level category.", "accent_words": ["family"],
+     "sub": "Sinhala, Tamil and English from day one."},
+    {"type": "stack", "dur": 3.0, "items": ["Expo", "React Native", "TypeScript", "Supabase", "Zustand", "ML Kit OCR", "LLM companion"]},
+    {"type": "end", "dur": 3.4, "line": "Designed + built solo by Senul Mapa", "sub": "Jedach · Colombo", "cta": "getgruv.site"}
+  ]
+}
