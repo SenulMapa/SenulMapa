@@ -1,34 +1,163 @@
 {
   "slug": "gruv",
   "name": "Gruv",
-  "kicker": "Jedach · fintech",
+  "kicker": "Jedach \u00b7 fintech",
   "tagline": "A money companion built for how young Sri Lankans actually live.",
-  "bg": "#050a07",
-  "fg": "#eef6f0",
+  "bg": "#020403",
+  "fg": "#f2f7f3",
   "accent": "#3ddc84",
+  "ambient": 0.09,
+  "rim": 0.4,
   "bpm": 120,
   "music_seed": 0,
   "scenes": [
-    {"type": "hook", "cards": [
-      {"text": "No open banking.", "beats": 2},
-      {"text": "No bank APIs.", "beats": 2},
-      {"text": "Just SMS.", "beats": 2, "size": 190},
-      {"text": "So I built around it.", "beats": 2}
-    ]},
-    {"type": "title", "beats": 6},
-    {"type": "phone", "beats": 6, "image": "10-home.png", "kicker": "01 · the ledger",
-     "title": "Every balance, derived.", "accent_words": ["derived."],
-     "sub": "Computed from the full transaction history, so a bad import rolls back."},
-    {"type": "phone", "beats": 6, "image": "15-add-transaction.png", "kicker": "02 · capture",
-     "title": "Bank SMS in. Ledger out.", "accent_words": ["ledger"],
-     "sub": "Plus statement OCR that runs on-device. Statements never leave the phone."},
-    {"type": "phone", "beats": 6, "image": "14-geldmann-chat.png", "kicker": "03 · geldmann",
-     "title": "A companion, not a guilt machine.", "accent_words": ["companion,"],
-     "sub": "Insights are real arithmetic on your ledger. The LLM just talks."},
-    {"type": "trio", "beats": 6, "images": ["11-activity.png", "12-insights.png", "13-profile.png"], "kicker": "04 · built for here",
-     "title": "Family is a top-level category.", "accent_words": ["family"],
-     "sub": "Sinhala, Tamil and English from day one."},
-    {"type": "stack", "beats": 6, "items": ["Expo", "React Native", "TypeScript", "Supabase", "Zustand", "ML Kit OCR", "LLM companion"]},
-    {"type": "end", "beats": 8, "line": "Designed + built solo by Senul Mapa", "sub": "Jedach · Colombo", "cta": "github.com/SenulMapa/gruv-case-study"}
+    {
+      "type": "type",
+      "cards": [
+        {
+          "text": "No open banking.",
+          "beats": 2
+        },
+        {
+          "text": "No bank APIs.",
+          "beats": 2
+        },
+        {
+          "text": "Just SMS.",
+          "beats": 2,
+          "size": 220,
+          "accent": true
+        }
+      ]
+    },
+    {
+      "type": "title",
+      "beats": 6
+    },
+    {
+      "type": "morph",
+      "beats": 7,
+      "title": "Your bank's texts become the ledger.",
+      "accent_words": [
+        "ledger."
+      ],
+      "from": {
+        "label": "Bank SMS",
+        "text": "Your a/c **1234 was debited LKR 2,450.00 at UBER EATS. Avl bal LKR 41,250.00",
+        "highlight": [
+          {
+            "word": "2,450.00",
+            "to": "amount"
+          },
+          {
+            "word": "UBER",
+            "to": "title"
+          }
+        ]
+      },
+      "to": {
+        "title": "Uber Eats",
+        "sub": "Food & Drink \u00b7 logged from SMS",
+        "amount": "Rs. 2,450.00"
+      }
+    },
+    {
+      "type": "type",
+      "in": "cut",
+      "cards": [
+        {
+          "text": "Every balance, derived.",
+          "beats": 3,
+          "size": 150,
+          "accent_words": [
+            "derived."
+          ]
+        }
+      ]
+    },
+    {
+      "type": "focus",
+      "beats": 6,
+      "image": "10-home.png",
+      "rect": [
+        0.04,
+        0.1,
+        0.96,
+        0.32
+      ],
+      "label": "Computed from the ledger. Never stored."
+    },
+    {
+      "type": "type",
+      "in": "flash",
+      "cards": [
+        {
+          "text": "A companion, not a guilt machine.",
+          "beats": 3,
+          "size": 140,
+          "accent_words": [
+            "companion,"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "focus",
+      "beats": 5,
+      "image": "14-geldmann-chat.png",
+      "rect": [
+        0.03,
+        0.7,
+        0.97,
+        0.92
+      ],
+      "zoom_at": 0.35,
+      "label": "Real arithmetic. The LLM just talks.",
+      "in": "whip"
+    },
+    {
+      "type": "montage",
+      "images": [
+        "11-activity.png",
+        "12-insights.png",
+        "15-add-transaction.png",
+        "13-profile.png",
+        "01-onboarding-welcome.png"
+      ]
+    },
+    {
+      "type": "trio",
+      "beats": 5,
+      "images": [
+        "11-activity.png",
+        "12-insights.png",
+        "13-profile.png"
+      ],
+      "title": "Family is a top-level category.",
+      "accent_words": [
+        "family"
+      ],
+      "size": 78
+    },
+    {
+      "type": "stack",
+      "beats": 4,
+      "items": [
+        "Expo",
+        "React Native",
+        "TypeScript",
+        "Supabase",
+        "Zustand",
+        "ML Kit OCR",
+        "LLM companion"
+      ]
+    },
+    {
+      "type": "end",
+      "beats": 6,
+      "line": "Designed + built solo by Senul Mapa",
+      "sub": "Jedach \u00b7 Colombo",
+      "cta": "github.com/SenulMapa/gruv-case-study"
+    }
   ]
 }

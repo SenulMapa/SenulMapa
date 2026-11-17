@@ -42,17 +42,27 @@ Every scheduled run starts cold: read this whole file first.
 - 120-220 words. English. No "I'm thrilled to announce".
 
 ## The reel (every post gets one)
-**Philosophy: Apple keynote motion graphics.** Momentum (nothing ever sits still; cuts whip through with
-matching velocity + motion blur), everything on the beat (scene lengths are whole beats at 120 BPM),
-huge display type that slams in one idea per card, product as hero (3D phone tilts, light sweeps),
-deep near-black backgrounds, original synthesized score with riser -> drop on the title. Read the
-docstring at the top of `tools/reel.py` before editing it.
-- Engine: `python3 tools/reel.py projects/<slug>/spec.json` -> `reels/<slug>.mp4` (1080x1350, 30fps, ~24-30s, with music). Review first with `--frames` and LOOK at the stills.
-- Spec schema: see `projects/gruv/spec.json` (the reference reel). Durations are in `beats` (0.5s each).
-  Scene types: `hook` (`cards`: [{text, beats, size?, accent?}] — 3-4 punchy cards, 2 beats each, last one in accent),
-  `title` (project name slam + glow), `phone` (portrait screenshot, 3D tilt), `trio` (3 portrait screenshots fanned),
-  `window` (landscape/desktop screenshot in a mac-style window), `stat` (`value` + `label`, numbers count up),
-  `stack` (`items` chips), `end` (`line`, `sub`, `cta`). Rough shape: hook 8 + title 6 + 3-4 product scenes x6 + stack 6 + end 8 beats.
+**Philosophy: Apple-keynote motion, benchmarked against award-winning work** (see the 8 rules in the
+docstring at the top of `tools/reel.py` and follow them): one idea per shot, varied tempo, camera
+language (punch-ins, montage, trio), at least one beat that ANIMATES THE MEANING, mixed transitions,
+near-black + rim light, sparse synced sound (ticks, snaps, silence before the drop, chime on lockup),
+product inside the first ~6s. Body copy goes in the LinkedIn post, never in the video.
+- Engine: `python3 tools/reel.py projects/<slug>/spec.json` -> `reels/<slug>.mp4` (1080x1350, 30fps, ~25-30s, with score).
+  ALWAYS run `--frames` first and LOOK at every still; then render and check a 2fps contact sheet
+  (`ffmpeg -i reels/<slug>.mp4 -vf "fps=2,scale=180:225,tile=14x4" sheet.jpg`). If any 3 consecutive
+  tiles look the same, the shot is too static: fix it.
+- Reference spec: `projects/gruv/spec.json`. Durations in `beats` (0.5s). Per-scene `"in"`: whip | zoom | cut | flash.
+  Scene types:
+  - `type` cards [{text, beats, size?, accent?, accent_words?, kicker?}]: the statement shots. 2-3 beats each.
+  - `title`: name slam + glow (the drop; score goes silent half a beat before it).
+  - `morph`: the "animate the meaning" beat: a message's key words fly out into a structured record.
+    Use it, or invent a better bespoke beat for the project (e.g. a counter, a before/after); add new scene types to the engine when needed.
+  - `focus` {image, rect:[x0,y0,x1,y1] normalized, label?}: phone settles, camera punches into one UI detail.
+  - `phone` {image}: hero phone with 3D settle. `trio` {images x3, title?}. `window` (desktop screenshot).
+  - `montage` {images, beats_each:1}: fast hard cuts, tempo change.
+  - `stat` {value, label}: numbers count up. `stack` {items}. `end` {line, sub, cta}: short lockup + chime.
+  Rough shape: type hook (6b) -> title (6b) -> morph/bespoke (7b) -> type (3b) -> focus (6b) -> type (3b) ->
+  focus/phone (5b) -> montage (5x1b) -> trio (5b) -> stack (4b) -> end (6b).
 - Change `music_seed` (0, 1, 2) between consecutive posts so the score isn't identical every time.
 - Visuals: use real screenshots from the repo (README images, docs/screenshots, assets). If none exist but the project is a web app with a public URL, you may screenshot it with playwright. If there are truly no visuals, build the reel from hook + title + stat + stack + end scenes (no fake UI).
 - Pick `bg`/`accent` from the project's own palette.
