@@ -7,6 +7,8 @@ Every scheduled run starts cold: read this whole file first.
 - **Monday** — project ideas for the week (no post).
 - **Tuesday + Friday** — one LinkedIn post each. Goal: >= 2 posts/week, every week.
 - Posts are scheduled in Buffer for **19:30 Asia/Colombo** (= 9:00 ET, US morning; Senul targets US remote startups).
+- Autopilot starts **Fri 2026-11-20**. The Gruv post (Nov 17) was left as a Buffer DRAFT for Senul to approve
+  as a pipeline check. If it's still a draft, leave it alone. Don't re-post Gruv (it's in posted.json as drafted).
 
 ## Buffer
 - Org `My organization` id `6ac47acd6feb218bec4087a0`
@@ -14,7 +16,10 @@ Every scheduled run starts cold: read this whole file first.
 - Free plan: max 10 scheduled posts. Never queue more than 2 ahead.
 - Create with `mode: customScheduled`, `schedulingType: automatic`, `dueAt` = same day 19:30+05:30 (if already past, next day 19:30).
 - **Dedupe:** before posting, `list_posts` for the channel with status scheduled/sent over the last 2 days + next 3 days. If a post already exists in that window, do NOT add another — log "skipped (already queued)" and stop.
-- Video asset URL: `https://raw.githubusercontent.com/SenulMapa/SenulMapa/launch-reels/reels/<slug>.mp4` (push it first, then curl -I the URL and confirm 200 + `Content-Type` video/mp4 or application/octet-stream before posting).
+- Video asset URL: pin it to the commit so caches never serve an old cut:
+  `https://raw.githubusercontent.com/SenulMapa/SenulMapa/<commit-sha>/reels/<slug>.mp4`
+  (push first, then `curl -sI` it and confirm HTTP 200 + a content-length matching the local file before posting).
+- Free plan: **no first comments** (Buffer rejects them). Put the link on its own line near the end of the post body.
 
 ## What to post about (in this order)
 1. **This week's work.** Look at the last 7 days:
@@ -33,12 +38,22 @@ Every scheduled run starts cold: read this whole file first.
 - Confident builder energy. Hook first line (it's all that shows before "...see more"). Short punchy lines, white space, no hashtag soup (max 3 at the end), no emoji walls (0-2).
 - Frame like a founder shipping: problem -> the gnarly part -> what he did -> what's next. Lean on the "no resources, still shipped" story (iOS apps without a Mac via CI, real infra with zero budget) where it fits.
 - **Hype the framing, never the facts.** Every number, user count, feature or result must be real (from README/commits/notes). No invented users, revenue, stars, or "acquired"/"raised". He's job hunting; recruiters click the repo.
-- End with a soft hook: a question, or "repo in comments" / link. Put links in `metadata.linkedin.firstComment` rather than the body (LinkedIn throttles posts with links).
+- End with a soft hook (a question), then the link on its own line, then hashtags.
 - 120-220 words. English. No "I'm thrilled to announce".
 
 ## The reel (every post gets one)
-- Engine: `python3 tools/reel.py projects/<slug>/spec.json` -> `reels/<slug>.mp4` (1080x1350, 30fps, ~20-30s). Review first with `--frames` and LOOK at the stills.
-- Spec schema: see `projects/gruv/spec.json`. Scene types: `hook` (2 lines, 2nd in accent), `title`, `phone` (portrait screenshot), `window` (landscape/desktop screenshot in a mac-style window), `stat` (`value` + `label`, numeric values count up), `stack` (`items` chips), `end` (`line`, `sub`, `cta`).
+**Philosophy: Apple keynote motion graphics.** Momentum (nothing ever sits still; cuts whip through with
+matching velocity + motion blur), everything on the beat (scene lengths are whole beats at 120 BPM),
+huge display type that slams in one idea per card, product as hero (3D phone tilts, light sweeps),
+deep near-black backgrounds, original synthesized score with riser -> drop on the title. Read the
+docstring at the top of `tools/reel.py` before editing it.
+- Engine: `python3 tools/reel.py projects/<slug>/spec.json` -> `reels/<slug>.mp4` (1080x1350, 30fps, ~24-30s, with music). Review first with `--frames` and LOOK at the stills.
+- Spec schema: see `projects/gruv/spec.json` (the reference reel). Durations are in `beats` (0.5s each).
+  Scene types: `hook` (`cards`: [{text, beats, size?, accent?}] — 3-4 punchy cards, 2 beats each, last one in accent),
+  `title` (project name slam + glow), `phone` (portrait screenshot, 3D tilt), `trio` (3 portrait screenshots fanned),
+  `window` (landscape/desktop screenshot in a mac-style window), `stat` (`value` + `label`, numbers count up),
+  `stack` (`items` chips), `end` (`line`, `sub`, `cta`). Rough shape: hook 8 + title 6 + 3-4 product scenes x6 + stack 6 + end 8 beats.
+- Change `music_seed` (0, 1, 2) between consecutive posts so the score isn't identical every time.
 - Visuals: use real screenshots from the repo (README images, docs/screenshots, assets). If none exist but the project is a web app with a public URL, you may screenshot it with playwright. If there are truly no visuals, build the reel from hook + title + stat + stack + end scenes (no fake UI).
 - Pick `bg`/`accent` from the project's own palette.
 - Fonts live in `fonts/` (Fraunces display, Schibsted Grotesk sans, JetBrains Mono).
