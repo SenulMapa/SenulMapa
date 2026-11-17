@@ -27,10 +27,20 @@ import music
 
 FONTS = os.path.join(ROOT, "fonts")
 _fc = {}
+TRACK = {}   # face name -> tracking in em (negative = tighter, the Apple display look)
 def font(name, size):
     k = (name, size)
-    if k not in _fc: _fc[k] = ImageFont.truetype(os.path.join(FONTS, name + ".woff"), size)
+    if k not in _fc:
+        for ext in (".woff", ".otf", ".ttf", ""):
+            fp = os.path.join(FONTS, name + ext)
+            if os.path.exists(fp): break
+        f = ImageFont.truetype(fp, size); f.face_name = name; _fc[k] = f
     return _fc[k]
+def trk(fnt): return TRACK.get(getattr(fnt, "face_name", ""), 0.0) * fnt.size
+def tlen(fnt, txt): return fnt.getlength(txt) + trk(fnt) * max(0, len(txt) - 1)
+SHINE = False   # specular sweep on screenshots/logo. Off by default (reads as a cheap effect).
+GRAD = None     # (c1, c2) gradient fill for accent words, or None for solid accent
+MUTED = (134, 134, 139, 255)
 
 DISPLAY = "fraunces-latin-600-normal"
 SANS = "schibsted-grotesk-latin-500-normal"
@@ -39,6 +49,7 @@ MONO = "jetbrains-mono-latin-600-normal"
 M = 90
 
 def hexc(h, a=255): h = h.lstrip("#"); return tuple(int(h[i:i+2], 16) for i in (0, 2, 4)) + (a,)
+ACCENT_SOLID = [None]
 def clamp(x, a=0.0, b=1.0): return max(a, min(b, x))
 def expo(t): t = clamp(t); return 1.0 if t >= 1 else 1 - 2 ** (-10 * t)
 def ease_out(t): t = clamp(t); return 1 - (1 - t) ** 4
@@ -51,6 +62,19 @@ def lerp(a, b, p): return a + (b - a) * p
 # ---------------- drawing helpers ----------------
 def text_sprite(txt, fnt, color, track=0):
     asc, desc = fnt.getmetrics()
+    if color == "ACCENT" or (GRAD and color == ACCENT_SOLID[0]):
+        m = text_sprite(txt, fnt, (255, 255, 255, 255), track)
+        if not GRAD: o = Image.new("RGBA", m.size, ACCENT_SOLID[0]); o.putalpha(m.getchannel("A")); return o
+        g = np.linspace(0, 1, m.width)[None, :, None]
+        c1, c2 = np.array(GRAD[0][:3], float), np.array(GRAD[1][:3], float)
+        rgb = np.broadcast_to(c1 + (c2 - c1) * g, (m.height, m.width, 3)).astype("uint8")
+        o = Image.fromarray(np.ascontiguousarray(rgb), "RGB").convert("RGBA"); o.putalpha(m.getchannel("A")); return o
+    t_em = trk(fnt)
+    if t_em and not track:
+        l, _, r, _ = fnt.getbbox(txt); w = int(tlen(fnt, txt) - l + 10)
+        im = Image.new("RGBA", (max(1, w), asc + desc + 10), (0, 0, 0, 0)); d = ImageDraw.Draw(im)
+        for i, ch in enumerate(txt): d.text((3 - l + fnt.getlength(txt[:i]) + t_em * i, 5), ch, font=fnt, fill=color)
+        return im
     if not track:
         l, _, r, _ = fnt.getbbox(txt)
         im = Image.new("RGBA", (max(1, r - l + 6), asc + desc + 10), (0, 0, 0, 0))
@@ -77,7 +101,7 @@ def wrap(txt, fnt, maxw):
     out, cur = [], ""
     for w in txt.split():
         t = (cur + " " + w).strip()
-        if fnt.getlength(t) <= maxw or not cur: cur = t
+        if tlen(fnt, t) <= maxw or not cur: cur = t
         else: out.append(cur); cur = w
     if cur: out.append(cur)
     return out
@@ -89,7 +113,7 @@ class Words:
         asc, desc = fnt.getmetrics(); lineh = int((asc + desc) * lh)
         aw = set(w.lower().strip(".,!?:;") for w in accent_words); lines = wrap(txt, fnt, maxw)
         for li, line in enumerate(lines):
-            ws = line.split(); wd = [fnt.getlength(w) for w in ws]; tot = sum(wd) + sp * (len(ws) - 1)
+            ws = line.split(); wd = [tlen(fnt, w) for w in ws]; tot = sum(wd) + sp * (len(ws) - 1)
             cx = x if align == "left" else x - tot / 2
             for w, d in zip(ws, wd):
                 col = accent if accent and w.strip(".,!?:;").lower() in aw else color
@@ -131,7 +155,7 @@ def build_window(path, w, title=""):
 
 def sweep(img, p, strength=70):
     """Diagonal specular band crossing the image at progress p (0..1)."""
-    if p <= 0 or p >= 1: return img
+    if not SHINE or p <= 0 or p >= 1: return img
     w, h = img.size
     xx = np.arange(w)[None, :] + np.arange(h)[:, None] * 0.45
     center = -0.3 * w + p * (w + 0.45 * h + 0.6 * w)
@@ -226,11 +250,11 @@ def compose(bg, layer, t, dur, tin, tout, last, push_amt=0.045):
 # Each builder returns (dur, draw). draw(c, t) paints on a transparent layer, t scene-local.
 # Optional draw.ticks / draw.hits = lists of scene-local times for sound sync. draw.push = push-in amount.
 def kick_sprite(spec, txt, size=26):
-    return text_sprite(txt.upper(), font(MONO, size), hexc(spec["accent"]), track=3)
+    return text_sprite(txt.upper(), font(SANS_B, size), MUTED, track=int(size * 0.14))
 
-def fit_font(txt, maxw, maxsize, minsize=60, face=DISPLAY):
-    s = maxsize
-    while s > minsize and max(font(face, s).getlength(w) for w in txt.split()) > maxw * 0.92: s -= 4
+def fit_font(txt, maxw, maxsize, minsize=60, face=None):
+    face = face or DISPLAY; s = maxsize
+    while s > minsize and max(tlen(font(face, s), w) for w in txt.split()) > maxw * 0.92: s -= 4
     return font(face, s)
 
 def scene_type(spec, s, B):
@@ -262,7 +286,7 @@ def scene_title(spec, s, B):
     gp = 70; gl = Image.new("RGBA", (name.width + 2 * gp, name.height + 2 * gp), acc[:3] + (0,))
     a = Image.new("L", gl.size, 0); a.paste(name.getchannel("A").point(lambda v: int(v * 0.85)), (gp, gp)); gl.putalpha(a)
     gl = gl.filter(ImageFilter.GaussianBlur(40))
-    tag = Words(spec["tagline"], font(SANS, 46), hexc(spec["fg"], 200), W - 2 * M - 40, W // 2, 820, align="center", lh=1.25)
+    tag = Words(spec["tagline"], font(SANS, 46), MUTED, W - 2 * M - 40, W // 2, 820, align="center", lh=1.25)
     kk = kick_sprite(spec, spec.get("kicker", "Jedach"))
     dur = s.get("beats", 6) * B
     def draw(c, t):
@@ -313,7 +337,7 @@ def scene_focus(spec, s, B, idx=0):
     if s.get("label"):
         f = font(SANS_B, 40); tw = f.getlength(s["label"])
         lbl = Image.new("RGBA", (int(tw + 72), 88), (0, 0, 0, 0)); d = ImageDraw.Draw(lbl)
-        d.rounded_rectangle((0, 0, lbl.width - 1, 87), 44, fill=(16, 16, 18, 235), outline=hexc(spec["accent"], 200), width=2)
+        d.rounded_rectangle((0, 0, lbl.width - 1, 87), 44, fill=(22, 22, 24, 240), outline=(255, 255, 255, 50), width=2)
         d.text((36, 18), s["label"], font=f, fill=hexc(spec["fg"]))
     z0 = s.get("zoom_at", 0.42)
     def draw(c, t):
@@ -390,10 +414,10 @@ def scene_morph(spec, s, B):
     lab = kick_sprite(spec, fr.get("label", "message"))
     cw = W - 2 * M; cxx, cyy = M, byy + bh + gap
     card = Image.new("RGBA", (cw, ch), (0, 0, 0, 0)); d = ImageDraw.Draw(card)
-    d.rounded_rectangle((0, 0, cw - 1, ch - 1), 40, fill=hexc(spec["fg"], 18), outline=acc[:3] + (150,), width=2)
+    d.rounded_rectangle((0, 0, cw - 1, ch - 1), 40, fill=hexc(spec["fg"], 16), outline=(255, 255, 255, 46), width=2)
     d.ellipse((36, 44, 148, 156), fill=acc[:3] + (60,))
     ic = to.get("icon", to["title"][:1]); fi = font(SANS_B, 54); d.text((92 - fi.getlength(ic) / 2, 62), ic, font=fi, fill=acc)
-    tsp = text_sprite(to["title"], font(SANS_B, 54), fg); ssp = text_sprite(to.get("sub", ""), font(SANS, 34), hexc(spec["fg"], 150))
+    tsp = text_sprite(to["title"], font(SANS_B, 54), fg); ssp = text_sprite(to.get("sub", ""), font(SANS, 34), MUTED)
     asp = text_sprite(to["amount"], font(SANS_B, 54), fg)
     targets = {"title": (cxx + 178, cyy + 30, tsp), "amount": (cxx + cw - 44 - asp.width, cyy + 30, asp)}
     arrow = text_sprite("↓", font(SANS_B, 64), acc)
@@ -445,12 +469,12 @@ def scene_stat(spec, s, B):
 
 def scene_stack(spec, s, B):
     dur = s.get("beats", 6) * B; fg, acc = hexc(spec["fg"]), hexc(spec["accent"])
-    f = font(MONO, 40); chips = []
+    f = font(SANS, 40); chips = []
     for it in s["items"]:
         w, h = int(f.getlength(it) + 64), 88
         ch = Image.new("RGBA", (w, h), (0, 0, 0, 0)); d = ImageDraw.Draw(ch)
-        d.rounded_rectangle((0, 0, w - 1, h - 1), 44, fill=hexc(spec["fg"], 16), outline=acc[:3] + (160,), width=2)
-        d.text((32, 18), it, font=f, fill=fg); chips.append(ch)
+        d.rounded_rectangle((0, 0, w - 1, h - 1), 44, fill=hexc(spec["fg"], 14), outline=(255, 255, 255, 46), width=2)
+        d.text((32, 16), it, font=f, fill=fg); chips.append(ch)
     rows, cur, cw = [], [], 0
     for ch in chips:
         if cw + ch.width > W - 2 * M and cur: rows.append((cur, cw - 18)); cur, cw = [], 0
@@ -477,8 +501,8 @@ def scene_end(spec, s, B):
     dur = s.get("beats", 6) * B; fg, acc = hexc(spec["fg"]), hexc(spec["accent"])
     name = text_sprite(spec["name"], font(DISPLAY, 190), fg)
     line = Words(s.get("line", "Built by Senul Mapa"), font(SANS_B, 46), fg, W - 2 * M, W // 2, 760, align="center")
-    sub = Words(s.get("sub", "Jedach · Colombo"), font(SANS, 36), hexc(spec["fg"], 150), W - 2 * M, W // 2, 772 + line.height, align="center")
-    cta = text_sprite(s["cta"], font(MONO, 34), acc) if s.get("cta") else None
+    sub = Words(s.get("sub", "Jedach · Colombo"), font(SANS, 36), MUTED, W - 2 * M, W // 2, 772 + line.height, align="center")
+    cta = text_sprite(s["cta"], font(SANS_B, 34), fg) if s.get("cta") else None
     cy = 812 + line.height + sub.height
     def draw(c, t):
         p = expo(prog(t, 0.0, 0.5))
@@ -489,10 +513,21 @@ def scene_end(spec, s, B):
             q = expo(prog(t, 0.8, 0.5))
             if q > 0.01:
                 d = ImageDraw.Draw(c); bw, bh = cta.width + 64, 82; bx, by = W / 2 - bw / 2, cy + (1 - q) * 30
-                d.rounded_rectangle((bx, by, bx + bw, by + bh), 41, fill=acc[:3] + (int(30 * q),), outline=acc[:3] + (int(255 * q),), width=3)
+                d.rounded_rectangle((bx, by, bx + bw, by + bh), 41, fill=(255, 255, 255, int(18 * q)), outline=(255, 255, 255, int(70 * q)), width=2)
                 paste(c, cta, W / 2 - cta.width / 2, by + 15, q)
     draw.push = 0.02
     return dur, draw
+
+def apply_style(spec):
+    """Typography + colour system from spec["style"]: {display, sans, sans_b, track (em), muted, accent2, shine}."""
+    global DISPLAY, SANS, SANS_B, GRAD, MUTED, SHINE
+    st = spec.get("style", {})
+    DISPLAY = st.get("display", DISPLAY); SANS = st.get("sans", SANS); SANS_B = st.get("sans_b", SANS_B)
+    TRACK.clear(); TRACK[DISPLAY] = st.get("track", 0.0); TRACK[SANS_B] = st.get("track_ui", 0.0)
+    MUTED = hexc(st.get("muted", "#86868b")); SHINE = st.get("shine", False)
+    ACCENT_SOLID[0] = hexc(spec["accent"])
+    GRAD = (hexc(spec["accent"]), hexc(st["accent2"])) if st.get("accent2") else None
+    _fc.clear()
 
 BUILDERS = {"type": scene_type, "hook": scene_type, "title": scene_title, "phone": scene_phone, "focus": scene_focus,
             "montage": scene_montage, "trio": scene_trio, "morph": scene_morph, "stat": scene_stat,
@@ -502,6 +537,7 @@ DEFAULT_IN = {"title": "cut", "montage": "cut", "end": "cut", "focus": "zoom", "
 def main():
     spec_path = sys.argv[1]; frames_only = "--frames" in sys.argv
     spec = json.load(open(spec_path)); spec["_dir"] = os.path.dirname(os.path.abspath(spec_path))
+    apply_style(spec)
     bpm = spec.get("bpm", 120); B = 60 / bpm
     slug = spec["slug"]; out = os.path.join(ROOT, "out", slug); os.makedirs(out, exist_ok=True)
     bg = BG(spec); scenes = []; dev_i = 0

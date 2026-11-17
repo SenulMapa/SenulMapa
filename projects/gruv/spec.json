@@ -1,13 +1,13 @@
 {
   "slug": "gruv",
   "name": "Gruv",
-  "kicker": "Jedach \u00b7 fintech",
-  "tagline": "A money companion built for how young Sri Lankans actually live.",
-  "bg": "#020403",
-  "fg": "#f2f7f3",
-  "accent": "#3ddc84",
-  "ambient": 0.09,
-  "rim": 0.4,
+  "kicker": "Jedach",
+  "tagline": "Personal finance, built for Sri Lanka.",
+  "bg": "#000000",
+  "fg": "#f5f5f7",
+  "accent": "#34d27b",
+  "ambient": 0.0,
+  "rim": 0.26,
   "bpm": 120,
   "music_seed": 0,
   "scenes": [
@@ -15,18 +15,22 @@
       "type": "type",
       "cards": [
         {
-          "text": "No open banking.",
-          "beats": 2
+          "text": "Sri Lanka has no open banking.",
+          "beats": 3,
+          "size": 150
         },
         {
-          "text": "No bank APIs.",
-          "beats": 2
-        },
-        {
-          "text": "Just SMS.",
+          "text": "Your bank just texts you.",
           "beats": 2,
-          "size": 220,
-          "accent": true
+          "size": 150
+        },
+        {
+          "text": "So SMS is the API.",
+          "beats": 3,
+          "size": 170,
+          "accent_words": [
+            "API."
+          ]
         }
       ]
     },
@@ -37,9 +41,9 @@
     {
       "type": "morph",
       "beats": 7,
-      "title": "Your bank's texts become the ledger.",
+      "title": "Every bank SMS becomes a ledger entry.",
       "accent_words": [
-        "ledger."
+        "ledger"
       ],
       "from": {
         "label": "Bank SMS",
@@ -66,7 +70,7 @@
       "in": "cut",
       "cards": [
         {
-          "text": "Every balance, derived.",
+          "text": "Nothing stored. Everything derived.",
           "beats": 3,
           "size": 150,
           "accent_words": [
@@ -85,7 +89,7 @@
         0.96,
         0.32
       ],
-      "label": "Computed from the ledger. Never stored."
+      "label": "Summed live from every transaction"
     },
     {
       "type": "type",
@@ -94,7 +98,7 @@
         {
           "text": "A companion, not a guilt machine.",
           "beats": 3,
-          "size": 140,
+          "size": 150,
           "accent_words": [
             "companion,"
           ]
@@ -112,7 +116,7 @@
         0.92
       ],
       "zoom_at": 0.35,
-      "label": "Real arithmetic. The LLM just talks.",
+      "label": "The math is real. The AI just explains it.",
       "in": "whip"
     },
     {
@@ -130,12 +134,12 @@
       "beats": 5,
       "images": [
         "11-activity.png",
-        "12-insights.png",
-        "13-profile.png"
+        "15-add-transaction.png",
+        "12-insights.png"
       ],
-      "title": "Family is a top-level category.",
+      "title": "Bank statements read on-device. Never uploaded.",
       "accent_words": [
-        "family"
+        "on-device."
       ],
       "size": 78
     },
@@ -155,9 +159,17 @@
     {
       "type": "end",
       "beats": 6,
-      "line": "Designed + built solo by Senul Mapa",
+      "line": "Designed and built solo by Senul Mapa",
       "sub": "Jedach \u00b7 Colombo",
       "cta": "github.com/SenulMapa/gruv-case-study"
     }
-  ]
+  ],
+  "style": {
+    "display": "InterDisplay-SemiBold",
+    "sans": "InterDisplay-Regular",
+    "sans_b": "InterDisplay-SemiBold",
+    "track": -0.03,
+    "muted": "#86868b",
+    "accent2": "#b8f04a"
+  }
 }

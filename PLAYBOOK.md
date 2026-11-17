@@ -63,6 +63,13 @@ product inside the first ~6s. Body copy goes in the LinkedIn post, never in the 
   - `stat` {value, label}: numbers count up. `stack` {items}. `end` {line, sub, cta}: short lockup + chime.
   Rough shape: type hook (6b) -> title (6b) -> morph/bespoke (7b) -> type (3b) -> focus (6b) -> type (3b) ->
   focus/phone (5b) -> montage (5x1b) -> trio (5b) -> stack (4b) -> end (6b).
+- **House style (Senul picked "A: Keynote", 2026-11-17): copy `style` + `bg`/`fg`/`ambient`/`rim` from projects/gruv/spec.json.**
+  Inter Display SemiBold, tracking -0.03em, pure black, Apple grey (#86868b) for secondary text, accent gradient
+  (`accent` -> `style.accent2`) on 1-2 payoff words only. Swap only the accent pair per project (pick from the project's own palette).
+  No shine/sweep on screenshots (SHINE stays off). No mono/green kicker labels.
+- **Copy rule: every line in the reel AND the post must be a reason to care**: a user benefit, a hard problem solved,
+  or an impressive engineering call. No trivia/feature-list filler (Senul's example of what NOT to write:
+  "Family gets its own category"). If a line wouldn't make a recruiter or a user lean in, cut it.
 - Change `music_seed` (0, 1, 2) between consecutive posts so the score isn't identical every time.
 - Visuals: use real screenshots from the repo (README images, docs/screenshots, assets). If none exist but the project is a web app with a public URL, you may screenshot it with playwright. If there are truly no visuals, build the reel from hook + title + stat + stack + end scenes (no fake UI).
 - Pick `bg`/`accent` from the project's own palette.
