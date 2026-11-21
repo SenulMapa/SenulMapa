@@ -90,7 +90,9 @@ def bass(m, dur, vol):
     n = int(dur * SR); x = saw(hz(m), n) + 0.6 * np.sin(2 * np.pi * hz(m) * np.arange(n) / SR)
     return filt(x, "low", 380) * env(n, 0.004, dur * 0.7) * vol
 
-def compose(total, drop, outro, bpm=120, seed=0, path="music.wav", whooshes=(), ticks=(), hits=()):
+def compose(total, drop, outro, bpm=120, seed=0, path="music.wav", whooshes=(), ticks=(), hits=(), flavor="keynote"):
+    """flavor: keynote (four-on-floor + 16th plucks), poster (half-time swung boom-bap, sparse keys, warm lowpass),
+    pulse (driving 16th bass + hats, arp ticking under the intro, for the terminal look)."""
     np.random.seed(seed)
     beat = 60 / bpm; bar = beat * 4; prog = PROGS[seed % len(PROGS)]
     n = int((total + 0.5) * SR)
@@ -100,6 +102,14 @@ def compose(total, drop, outro, bpm=120, seed=0, path="music.wav", whooshes=(), 
         if tb >= outro: break
         if tb < drop:
             if b % 2 == 0 and tb < drop - beat: add(drums, kick(0.5), tb); kicks.append(tb)
+        elif flavor == "poster":
+            if b % 4 in (0, 3) or (b % 8 == 2): add(drums, kick(0.95), tb + (beat * 0.5 if b % 8 == 2 else 0)); kicks.append(tb)
+            if b % 2 == 1: add(drums, clap(0.42), tb, 0.05)
+            add(drums, hat(0.22), tb + beat * 0.58, 0.25); add(drums, hat(0.14, 0.02), tb, -0.25)
+        elif flavor == "pulse":
+            add(drums, kick(1.0), tb); kicks.append(tb)
+            if b % 2 == 1: add(drums, clap(0.30), tb, 0.05)
+            for q in range(4): add(drums, hat(0.20 if q == 2 else 0.11, 0.018), tb + q * beat / 4, 0.3 if q % 2 else -0.3)
         else:
             add(drums, kick(1.0), tb); kicks.append(tb)
             if b % 2 == 1: add(drums, clap(0.38), tb, 0.05)
@@ -109,14 +119,25 @@ def compose(total, drop, outro, bpm=120, seed=0, path="music.wav", whooshes=(), 
         tb = i * bar
         if tb >= outro: break
         root, ivs = prog[i % len(prog)]
-        add(music, pad_bar(root, ivs, min(bar, outro - tb), 0.30), tb)
-        for k in range(8):
-            t8 = tb + k * beat / 2
-            if drop <= t8 < outro: add(music, bass(root - 12, beat / 2, 0.55), t8)
+        add(music, pad_bar(root, ivs, min(bar, outro - tb), 0.18 if flavor == "pulse" else 0.30), tb)
+        notes = [root + 24 + iv for iv in ivs]
+        if flavor == "poster":
+            for k in (0, 3, 6):
+                t8 = tb + k * beat / 2
+                if drop <= t8 < outro: add(music, bass(root - 12, beat * 0.9, 0.6), t8)
+            for k, n_ in ((0, 0), (5, 1), (10, 2), (14, 1)):
+                t16 = tb + k * beat / 4
+                if drop + bar * 0.5 <= t16 < outro: add(music, pluck(notes[n_ % len(notes)] - 12, 0.2), t16, 0.3 if k % 2 else -0.3)
+            continue
+        steps = 16 if flavor == "pulse" else 8
+        for k in range(steps):
+            t8 = tb + k * bar / steps
+            if drop <= t8 < outro: add(music, bass(root - 12 + (12 if flavor == "pulse" and k % 4 == 2 else 0), bar / steps, 0.5), t8)
         for k in range(16):
             t16 = tb + k * beat / 4
+            pre = flavor == "pulse" and t16 < drop - beat and k % 2 == 0
+            if pre: add(music, pluck(notes[(k // 2) % len(notes)] + 12, 0.06), t16, 0.35 if k % 4 else -0.35)
             if drop + bar * 0.5 <= t16 < outro:
-                notes = [root + 24 + iv for iv in ivs]
                 add(music, pluck(notes[k % len(notes)] + (12 if k % 8 == 7 else 0), 0.15), t16, 0.35 if k % 2 else -0.35)
     root, ivs = prog[int(outro / bar) % len(prog)]
     add(music, pad_bar(root, ivs, total - outro + 0.4, 0.40), outro)
@@ -125,6 +146,7 @@ def compose(total, drop, outro, bpm=120, seed=0, path="music.wav", whooshes=(), 
         i = int(k * SR); tt = np.arange(min(int(0.35 * SR), n - i)) / SR
         sc[i:i + len(tt)] = np.minimum(sc[i:i + len(tt)], 1 - 0.55 * np.exp(-tt / 0.1))
     music *= sc[:, None]
+    if flavor == "poster": music = filt(music, "low", 2600)
     # the breath: half a beat of silence right before the drop
     g0, g1 = int((drop - beat / 2) * SR), int(drop * SR)
     if g0 > 0:

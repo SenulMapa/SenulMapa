@@ -1,0 +1,183 @@
+{
+  "slug": "tanka-poster",
+  "name": "Tanka",
+  "kicker": "Jedach",
+  "tagline": "Fuel availability, one open API for Sri Lanka.",
+  "bg": "#000000",
+  "fg": "#f5f5f7",
+  "accent": "#f5a623",
+  "ambient": 0.0,
+  "rim": 0.26,
+  "music_seed": 1,
+  "scenes": [
+    {
+      "type": "type",
+      "cards": [
+        {
+          "text": "Three fuel tracker apps.",
+          "beats": 2,
+          "size": 150
+        },
+        {
+          "text": "Three separate databases.",
+          "beats": 2,
+          "size": 150
+        },
+        {
+          "text": "Zero shared data.",
+          "beats": 3,
+          "size": 170,
+          "accent_words": [
+            "Zero"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "title",
+      "beats": 4
+    },
+    {
+      "type": "morph",
+      "beats": 7,
+      "title": "One report. Every app sees it.",
+      "accent_words": [
+        "Every"
+      ],
+      "from": {
+        "label": "Crowd report",
+        "text": "Station 114: petrol_92 available, queue 0",
+        "highlight": [
+          {
+            "word": "petrol_92",
+            "to": "title"
+          },
+          {
+            "word": "available",
+            "to": "amount"
+          }
+        ]
+      },
+      "to": {
+        "title": "Petrol 92",
+        "sub": "Trust-weighted \u00b7 partner reports count more",
+        "amount": "Available",
+        "icon": "P"
+      }
+    },
+    {
+      "type": "type",
+      "cards": [
+        {
+          "text": "One open API. Any app plugs in.",
+          "beats": 3,
+          "size": 150,
+          "accent_words": [
+            "open",
+            "API."
+          ]
+        }
+      ]
+    },
+    {
+      "type": "focus",
+      "beats": 6,
+      "image": "14-home-eligible.png",
+      "rect": [
+        0.03,
+        0.08,
+        0.97,
+        0.24
+      ],
+      "label": "Know if your plate can pump today"
+    },
+    {
+      "type": "type",
+      "cards": [
+        {
+          "text": "No login. No app store.",
+          "beats": 3,
+          "size": 160,
+          "accent_words": [
+            "No",
+            "app",
+            "store."
+          ]
+        }
+      ]
+    },
+    {
+      "type": "focus",
+      "beats": 5,
+      "image": "15-qr-3w.png",
+      "rect": [
+        0.03,
+        0.7,
+        0.97,
+        0.88
+      ],
+      "zoom_at": 0.35,
+      "label": "Your quota, before the queue"
+    },
+    {
+      "type": "montage",
+      "images": [
+        "01-onboard-1.png",
+        "02-onboard-plate.png",
+        "03-onboard-vehicle.png",
+        "10-home.png",
+        "14-home-eligible.png"
+      ]
+    },
+    {
+      "type": "stat",
+      "beats": 4,
+      "value": "872",
+      "label": "stations seeded island-wide"
+    },
+    {
+      "type": "stack",
+      "beats": 4,
+      "items": [
+        "React",
+        "TypeScript",
+        "PWA",
+        "Leaflet",
+        "Bun",
+        "Hono",
+        "Cloudflare Workers",
+        "Supabase"
+      ]
+    },
+    {
+      "type": "poster",
+      "beats": 6,
+      "headline": "One open fuel API. One app on top.",
+      "accent_words": [
+        "open"
+      ],
+      "images": [
+        "14-home-eligible.png",
+        "15-qr-3w.png"
+      ],
+      "line": "Built by Senul Mapa",
+      "cta": "github.com/SenulMapa/TankaPWA"
+    },
+    {
+      "type": "end",
+      "beats": 6,
+      "line": "Built by Senul Mapa",
+      "sub": "Jedach \u00b7 Colombo",
+      "cta": "github.com/SenulMapa/TankaPWA"
+    }
+  ],
+  "style": {
+    "display": "InterDisplay-SemiBold",
+    "sans": "InterDisplay-Regular",
+    "sans_b": "InterDisplay-SemiBold",
+    "track": -0.03,
+    "muted": "#86868b",
+    "accent2": "#ffc880"
+  },
+  "look": "poster"
+}

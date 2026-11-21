@@ -48,6 +48,7 @@ language (punch-ins, montage, trio), at least one beat that ANIMATES THE MEANING
 near-black + rim light, sparse synced sound (ticks, snaps, silence before the drop, chime on lockup),
 product inside the first ~6s. Body copy goes in the LinkedIn post, never in the video.
 - Engine: `python3 tools/reel.py projects/<slug>/spec.json` -> `reels/<slug>.mp4` (1080x1350, 30fps, ~25-30s, with score).
+  `--still` -> `reels/<slug>.png`, `--carousel` -> `reels/<slug>.pdf` (+ cover jpg). Static renders: check every page by eye.
   ALWAYS run `--frames` first and LOOK at every still; then render and check a 2fps contact sheet
   (`ffmpeg -i reels/<slug>.mp4 -vf "fps=2,scale=180:225,tile=14x4" sheet.jpg`). If any 3 consecutive
   tiles look the same, the shot is too static: fix it.
@@ -63,14 +64,33 @@ product inside the first ~6s. Body copy goes in the LinkedIn post, never in the 
   - `stat` {value, label}: numbers count up. `stack` {items}. `end` {line, sub, cta}: short lockup + chime.
   Rough shape: type hook (6b) -> title (6b) -> morph/bespoke (7b) -> type (3b) -> focus (6b) -> type (3b) ->
   focus/phone (5b) -> montage (5x1b) -> trio (5b) -> stack (4b) -> end (6b).
-- **House style (Senul picked "A: Keynote", 2026-11-17): copy `style` + `bg`/`fg`/`ambient`/`rim` from projects/gruv/spec.json.**
-  Inter Display SemiBold, tracking -0.03em, pure black, Apple grey (#86868b) for secondary text, accent gradient
-  (`accent` -> `style.accent2`) on 1-2 payoff words only. Swap only the accent pair per project (pick from the project's own palette).
-  No shine/sweep on screenshots (SHINE stays off). No mono/green kicker labels.
+- **Looks: ROTATE, never the same look twice in a row** (Senul, 2026-11-21: "the videos look the exact same
+  between all posts, freshen it up; static renders are fine too"). Set `"look"` in the spec:
+  - `keynote`: pure black, Inter, centred slams, glass phones + rim light, gradient accent words (gruv, tanka).
+    Copy `style` + `bg`/`fg`/`ambient`/`rim` from projects/gruv/spec.json.
+  - `poster`: Swiss print. Warm paper, huge left-aligned grotesk, accent = highlighter block behind payoff words,
+    flat screenshots with hard accent offset shadow, grain + registration marks, slide transitions, swung score.
+    Demo: projects/tanka/spec.poster.json.
+  - `terminal`: CRT dev log. Mono typed with a block cursor, `$ ./name --launch` title, framed screenshots,
+    scanlines + status bar, glitch cuts, faster pulse score. Best for infra/CLI/agent/Linux projects.
+    Demo: projects/tanka/spec.terminal.json.
+  Poster/terminal set their own bg/fg/fonts; only `accent` comes from the project. Omit `bpm` and per-scene `"in"`
+  for them (the look picks tempo + transitions). Swap only the accent per project (from the project's own palette).
+- **Format rotation.** Default order per post: video (next look in rotation) -> video (next look) -> static. Static =
+  either a single image (`--still`, uses the first `poster` scene) or a LinkedIn document carousel (`--carousel`,
+  one page per type card/scene, montage skipped -> `reels/<slug>.pdf` + `reels/<slug>-cover.jpg`). Pick carousel when
+  the story has 5+ strong beats, image when one headline + screenshot says it. Buffer: image -> `assets:[{image:{url, metadata:{altText}}}]`;
+  carousel -> `assets:[{document:{url, title, thumbnailUrl: <cover.jpg raw url>}}]` (commit-pinned raw URLs, same 200 check).
+  Document posts via Buffer are untested: if create_post rejects it, fall back to the single image and note it.
+- Vary the **structure** too, not just the skin: don't reuse the previous post's scene order. Open with the product
+  sometimes (focus/phone first, hook second), sometimes a stat, sometimes the morph. Use the `poster` scene type
+  (headline + 1-2 screens + optional stat + footer) as a hold inside videos or as the still.
+- Record `"look"` and `"format"` (video|image|carousel) in posted.json; check the last entry before choosing.
+- No shine/sweep on screenshots (SHINE stays off). Keynote: no mono/green kicker labels.
 - **Copy rule: every line in the reel AND the post must be a reason to care**: a user benefit, a hard problem solved,
   or an impressive engineering call. No trivia/feature-list filler (Senul's example of what NOT to write:
   "Family gets its own category"). If a line wouldn't make a recruiter or a user lean in, cut it.
-- Change `music_seed` (0, 1, 2) between consecutive posts so the score isn't identical every time.
+- Change `music_seed` (0, 1, 2) between consecutive posts so the score isn't identical every time (each look also has its own score flavor).
 - Visuals: use real screenshots from the repo (README images, docs/screenshots, assets). If none exist but the project is a web app with a public URL, you may screenshot it with playwright. If there are truly no visuals, build the reel from hook + title + stat + stack + end scenes (no fake UI).
 - Pick `bg`/`accent` from the project's own palette.
 - Fonts live in `fonts/` (Fraunces display, Schibsted Grotesk sans, JetBrains Mono).
@@ -96,5 +116,5 @@ product inside the first ~6s. Body copy goes in the LinkedIn post, never in the 
 | onecli | OneCLI PR #541 (open-source contribution) | SenulMapa/onecli fork | stat+stack |
 
 ## Logs
-- `posted.json` — append `{date, slug, topic, buffer_post_id, source: "week"|"fallback"}` after every post.
+- `posted.json` — append `{date, slug, topic, buffer_post_id, source: "week"|"fallback", look, format}` after every post.
 - `ideas.md` — weekly idea lists.
