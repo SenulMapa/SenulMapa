@@ -700,7 +700,9 @@ def scene_stack(spec, s, B):
 def scene_end(spec, s, B):
     """Minimal lockup, hard landing with the chime. Short."""
     dur = s.get("beats", 6) * B; fg, acc = hexc(spec["fg"]), hexc(spec["accent"])
-    name = text_sprite(spec["name"], font(DISPLAY, 190), fg)
+    nsz = 190
+    while nsz > 80 and tlen(font(DISPLAY, nsz), spec["name"]) > (W - 2 * M) * 0.95: nsz -= 6
+    name = text_sprite(spec["name"], font(DISPLAY, nsz), fg)
     line = Words(s.get("line", "Built by Senul Mapa"), font(SANS_B, 46), fg, W - 2 * M, W // 2, 760, align="center")
     sub = Words(s.get("sub", "Jedach · Colombo"), font(SANS, 36), MUTED, W - 2 * M, W // 2, 772 + line.height, align="center")
     cta = text_sprite(s["cta"], font(SANS_B, 34), fg) if s.get("cta") else None

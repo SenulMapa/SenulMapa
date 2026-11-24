@@ -1,0 +1,164 @@
+{
+  "slug": "hermes-native",
+  "name": "Hermes Native",
+  "bin": "hermes-native",
+  "kicker": "Jedach",
+  "tagline": "A native iOS app. Built without a Mac.",
+  "bg": "#000000",
+  "fg": "#f5f5f7",
+  "accent": "#7c77ff",
+  "ambient": 0.0,
+  "rim": 0.26,
+  "music_seed": 2,
+  "look": "terminal",
+  "scenes": [
+    {
+      "type": "type",
+      "cards": [
+        {
+          "text": "Shipping an iOS app needs a Mac.",
+          "beats": 3,
+          "size": 150
+        },
+        {
+          "text": "I build on Linux.",
+          "beats": 2,
+          "size": 160
+        },
+        {
+          "text": "Shipped it anyway.",
+          "beats": 3,
+          "size": 170,
+          "accent_words": [
+            "anyway."
+          ]
+        }
+      ]
+    },
+    {
+      "type": "title",
+      "beats": 5
+    },
+    {
+      "type": "morph",
+      "beats": 8,
+      "title": "git push. The Mac only exists in CI.",
+      "accent_words": [
+        "Mac"
+      ],
+      "from": {
+        "label": "push to main",
+        "text": "macos-15 runner: xcodegen, tests, xcodebuild archive, signing disabled",
+        "highlight": [
+          {
+            "word": "archive",
+            "to": "title"
+          },
+          {
+            "word": "disabled",
+            "to": "amount"
+          }
+        ]
+      },
+      "to": {
+        "title": "Release .ipa",
+        "sub": "AltStore re-signs it on device",
+        "amount": "unsigned",
+        "icon": "H"
+      }
+    },
+    {
+      "type": "type",
+      "cards": [
+        {
+          "text": "Zero Apple certificates in CI.",
+          "beats": 3,
+          "size": 150,
+          "accent_words": [
+            "Zero"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "montage",
+      "images": [
+        "build.yml.png",
+        "project.yml.png",
+        "make-ipa.sh.png",
+        "source.json.png",
+        "HostKeyValidator.swift.png"
+      ]
+    },
+    {
+      "type": "stat",
+      "beats": 4,
+      "value": "38",
+      "label": "unit tests run on every push, before the archive"
+    },
+    {
+      "type": "type",
+      "cards": [
+        {
+          "text": "Streaming chat. Real SSH terminal. Cron.",
+          "beats": 3,
+          "size": 140,
+          "accent_words": [
+            "SSH"
+          ]
+        },
+        {
+          "text": "Changed host key? Refuses to connect.",
+          "beats": 3,
+          "size": 140,
+          "accent_words": [
+            "Refuses"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "stack",
+      "beats": 4,
+      "items": [
+        "SwiftUI",
+        "iOS 26",
+        "Liquid Glass",
+        "swift-nio-ssh",
+        "SwiftTerm",
+        "XcodeGen",
+        "GitHub Actions",
+        "AltStore"
+      ]
+    },
+    {
+      "type": "poster",
+      "beats": 4,
+      "headline": "10 phases. 16 hours. No Mac.",
+      "accent_words": [
+        "16",
+        "hours."
+      ],
+      "images": [
+        "build.yml.png",
+        "HostKeyValidator.swift.png"
+      ],
+      "line": "Built by Senul Mapa",
+      "cta": "github.com/SenulMapa/hermes-native"
+    },
+    {
+      "type": "end",
+      "beats": 5,
+      "line": "Built by Senul Mapa",
+      "sub": "Jedach \u00b7 Colombo",
+      "cta": "github.com/SenulMapa/hermes-native"
+    }
+  ],
+  "style": {
+    "display": "InterDisplay-SemiBold",
+    "sans": "InterDisplay-Regular",
+    "sans_b": "InterDisplay-SemiBold",
+    "track": -0.03,
+    "muted": "#86868b"
+  }
+}
