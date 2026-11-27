@@ -81,7 +81,7 @@ product inside the first ~6s. Body copy goes in the LinkedIn post, never in the 
   one page per type card/scene, montage skipped -> `reels/<slug>.pdf` + `reels/<slug>-cover.jpg`). Pick carousel when
   the story has 5+ strong beats, image when one headline + screenshot says it. Buffer: image -> `assets:[{image:{url, metadata:{altText}}}]`;
   carousel -> `assets:[{document:{url, title, thumbnailUrl: <cover.jpg raw url>}}]` (commit-pinned raw URLs, same 200 check).
-  Document posts via Buffer are untested: if create_post rejects it, fall back to the single image and note it.
+  Document posts via Buffer WORK (first used 2026-11-27, reflow: Buffer accepted it as LinkedIn type "carousel"). If create_post ever rejects one, fall back to the single image and note it.
 - Vary the **structure** too, not just the skin: don't reuse the previous post's scene order. Open with the product
   sometimes (focus/phone first, hook second), sometimes a stat, sometimes the morph. Use the `poster` scene type
   (headline + 1-2 screens + optional stat + footer) as a hold inside videos or as the still.
