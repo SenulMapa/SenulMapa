@@ -1,0 +1,141 @@
+{
+ "slug": "reflow",
+ "name": "Reflow",
+ "kicker": "A-Level study planner",
+ "tagline": "Your study week, derived. Not guessed.",
+ "bg": "#000000",
+ "fg": "#f5f5f7",
+ "accent": "#5b62f0",
+ "music_seed": 2,
+ "look": "poster",
+ "scenes": [
+  {
+   "type": "type",
+   "cards": [
+    {
+     "text": "Most study timetables are guesses.",
+     "beats": 3,
+     "size": 150,
+     "accent_words": [
+      "guesses."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "title",
+   "beats": 4
+  },
+  {
+   "type": "morph",
+   "beats": 7,
+   "title": "Weak subject? More hours.",
+   "accent_words": [
+    "More",
+    "hours."
+   ],
+   "from": {
+    "label": "Your signals",
+    "text": "Mathematics: confidence 4.0/10, past papers, days to exam",
+    "highlight": [
+     {
+      "word": "Mathematics",
+      "to": "title"
+     },
+     {
+      "word": "4.0/10",
+      "to": "amount"
+     }
+    ]
+   },
+   "to": {
+    "title": "Mathematics",
+    "sub": "Derived by the engine, not typed in",
+    "amount": "10.7h",
+    "icon": "M"
+   }
+  },
+  {
+   "type": "focus",
+   "beats": 6,
+   "image": "setup.png",
+   "rect": [
+    0.02,
+    0.33,
+    0.98,
+    0.62
+   ],
+   "label": "Confidence per topic drives the split"
+  },
+  {
+   "type": "type",
+   "cards": [
+    {
+     "text": "Life happens. The week reflows.",
+     "beats": 3,
+     "size": 150,
+     "accent_words": [
+      "reflows."
+     ]
+    }
+   ]
+  },
+  {
+   "type": "focus",
+   "beats": 6,
+   "image": "this-week.png",
+   "rect": [
+    0.02,
+    0.245,
+    0.98,
+    0.665
+   ],
+   "label": "Type \"dinner tonight 6-8\". Sessions move."
+  },
+  {
+   "type": "type",
+   "cards": [
+    {
+     "text": "Log a mistake. Next week bends toward it.",
+     "beats": 3,
+     "size": 140,
+     "accent_words": [
+      "bends"
+     ]
+    }
+   ]
+  },
+  {
+   "type": "focus",
+   "beats": 6,
+   "image": "correction-booklet.png",
+   "rect": [
+    0.02,
+    0.02,
+    0.98,
+    0.47
+   ],
+   "label": "Every mistake makes the schedule smarter"
+  },
+  {
+   "type": "stat",
+   "beats": 5,
+   "value": "3x",
+   "label": "max exam-crunch boost, bounded so no subject starves"
+  },
+  {
+   "type": "poster",
+   "beats": 6,
+   "headline": "You study. Reflow does the maths.",
+   "accent_words": [
+    "maths."
+   ],
+   "images": [
+    "insights.png",
+    "this-week.png"
+   ],
+   "line": "Built by Senul Mapa",
+   "cta": "github.com/SenulMapa/reflow"
+  }
+ ]
+}
